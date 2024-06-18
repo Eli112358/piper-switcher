@@ -3,7 +3,7 @@
 
 SWITCHER_DIR=/etc/piper-switcher.d
 EDIT_MODE_ENABLED=true
-SLEEP_TIME=2
+SLEEP_TIME=1
 
 # replace these with your details
 BROWSER_CLASS="Vivaldi-stable"
