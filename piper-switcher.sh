@@ -4,11 +4,12 @@
 SWITCHER_DIR=/etc/piper-switcher.d
 EDIT_MODE_ENABLED=true
 SLEEP_TIME=2
-DEVICE_ID="booming-agouti"
-DESKTOP_CLASS="plasmashell"
+
 BROWSER_CLASS="Vivaldi-stable"
-USER="eli"
+DESKTOP_CLASS="plasmashell"
+DEVICE_ID="booming-agouti"
 DISPLAY=:0
+USER="eli"
 
 function get_profile() {
 	echo "$SWITCHER_DIR/profiles/$1.profile"
