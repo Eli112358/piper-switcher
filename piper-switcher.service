@@ -1,0 +1,10 @@
+[Unit]
+Description=Switch Piper profiles automatically
+After=network-online.target
+
+[Service]
+User=root
+ExecStart=/usr/bin/piper-switcher.sh
+
+[Install]
+WantedBy=multi-user.target
