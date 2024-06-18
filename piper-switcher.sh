@@ -5,6 +5,7 @@ SWITCHER_DIR=/etc/piper-switcher.d
 EDIT_MODE_ENABLED=true
 SLEEP_TIME=2
 
+# replace these with your details
 BROWSER_CLASS="Vivaldi-stable"
 DESKTOP_CLASS="plasmashell"
 DEVICE_ID="booming-agouti"
