@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # set -xve
 
 SWITCHER_DIR=/etc/piper-switcher.d
