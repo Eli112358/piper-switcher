@@ -78,9 +78,9 @@ function main() {
 	sleep $SLEEP_TIME
 	if [[ $EDIT_MODE_ENABLED ]]; then
 		check_edit_mode
-		if [ $EDIT_MODE == true ]; then
-			return
-		fi
+	fi
+	if [ $EDIT_MODE == true ]; then
+		return
 	fi
 	active_class=$(su $USER -c "export DISPLAY='$DISPLAY';xdotool getwindowfocus getwindowclassname")
 	profile_file=$(get_profile $active_class)
