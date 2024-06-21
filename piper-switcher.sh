@@ -22,6 +22,14 @@ function get_active_profile() {
 	ratbagctl $DEVICE_ID profile active get
 }
 
+function get_previous_profile_file() {
+	if [[ -f $PREV_PROFILE_FILE ]]; then
+		cat $PREV_PROFILE_FILE
+		return
+	fi
+	echo ''
+}
+
 function parse_action() {
 	echo $1 | awk -F'is mapped to ' '{print $2}' | sed -e 's/↓/+KEY_/' -e 's/↑/-KEY_/' -e 's/↕/KEY_/' | tr -d "'"
 }
