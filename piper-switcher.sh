@@ -66,17 +66,22 @@ function activate_profile() {
 }
 
 function check_edit_mode() {
-	if [[ -n $(pgrep -x "piper") ]]; then
-		if [ $EDIT_MODE == false ]; then
-			echo "Entering edit mode"
-			EDIT_MODE=true
-		fi
-	elif [ $EDIT_MODE == true ]; then
-		echo "Exiting edit mode and exporting new profile"
-		echo "# new profile" > $(get_profile new)
-		ratbagctl $DEVICE_ID profile 2 get | grep '^Button: [0-9]* is mapped to ' >> $(get_profile new)
-		EDIT_MODE=false
+	is_piper_running=false
+	if [[ -n $(pgrep -x piper) ]]; then
+		is_piper_running=true
 	fi
+	if [ $EDIT_MODE == $is_piper_running ]; then
+		return
+	fi
+	if [ $is_piper_running == true ]; then
+		echo "Entering edit mode"
+		EDIT_MODE=true
+		return
+	fi
+	echo "Exiting edit mode and exporting new profile"
+	echo "# new profile" > $(get_profile new)
+	ratbagctl $DEVICE_ID profile 2 get | grep '^Button: [0-9]* is mapped to ' >> $(get_profile new)
+	EDIT_MODE=false
 }
 
 function main() {
