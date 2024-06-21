@@ -1,0 +1,13 @@
+# each value that you need to change has a comment before it with a command and/or instructions on how to get the information
+# `ratbagctl`
+DEVICE_ID=""
+# shouldn't need to change this
+DISPLAY=":0"
+# `echo $USER` or `whoami`
+USER=""
+# `sleep 2;xdotool getwindowfocus getwindowclassname` and switch to your desktop (by clicking on it)
+PROFILE_CLASSES[0]=""
+# `sleep 2;xdotool getwindowfocus getwindowclassname` and switch to your web browser (by clicking on it)
+PROFILE_CLASSES[1]=""
+# leave as empty string
+PROFILE_CLASSES[2]=""
