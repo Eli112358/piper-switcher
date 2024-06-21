@@ -67,7 +67,10 @@ function activate_profile() {
 
 function check_edit_mode() {
 	if [[ -n $(pgrep -x "piper") ]]; then
-		EDIT_MODE=true
+		if [ $EDIT_MODE == false ]; then
+			echo "Entering edit mode"
+			EDIT_MODE=true
+		fi
 	elif [ $EDIT_MODE == true ]; then
 		echo "Exiting edit mode and exporting new profile"
 		echo "# new profile" > $(get_profile new)
