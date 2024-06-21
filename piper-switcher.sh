@@ -89,9 +89,6 @@ function main() {
 	fi
 	PREV_ACTIVE_CLASS=$active_class
 	profile_file=$(get_profile $active_class)
-	if [[ $active_class =~ ^steam_app_ ]]; then
-		profile_file=$(get_profile steam/${active_class:10})
-	fi
 	if [[ $active_class == $DESKTOP_CLASS ]]; then
 		activate_profile 0
 	elif [[ $active_class == $BROWSER_CLASS ]]; then
