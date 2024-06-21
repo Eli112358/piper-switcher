@@ -15,6 +15,7 @@ function get_profile() {
 }
 
 EDIT_MODE=false
+PREV_ACTIVE_CLASS=''
 PREV_PROFILE_FILE=$(get_profile previous)
 
 function get_active_profile() {
@@ -83,6 +84,10 @@ function main() {
 		return
 	fi
 	active_class=$(su $USER -c "export DISPLAY='$DISPLAY';xdotool getwindowfocus getwindowclassname")
+	if [[ $active_class == $PREV_ACTIVE_CLASS ]]; then
+		return
+	fi
+	PREV_ACTIVE_CLASS=$active_class
 	profile_file=$(get_profile $active_class)
 	if [[ $active_class =~ ^steam_app_ ]]; then
 		profile_file=$(get_profile steam/${active_class:10})
