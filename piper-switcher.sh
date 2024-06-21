@@ -14,7 +14,7 @@ function get_profile() {
 	echo "$SWITCHER_DIR/profiles/$1.profile"
 }
 
-EDIT_MODE=''
+EDIT_MODE=false
 PREV_PROFILE_FILE=$(get_profile previous)
 
 function get_active_profile() {
@@ -65,12 +65,12 @@ function activate_profile() {
 
 function check_edit_mode() {
 	if [[ -n $(pgrep -x "piper") ]]; then
-		EDIT_MODE=1
-	elif [[ -n $EDIT_MODE ]]; then
+		EDIT_MODE=true
+	elif [ $EDIT_MODE == true ]; then
 		echo "Exiting edit mode and exporting new profile"
 		echo "# new profile" > $(get_profile new)
 		ratbagctl $DEVICE_ID profile 2 get | grep '^Button: [0-9]* is mapped to ' >> $(get_profile new)
-		EDIT_MODE=''
+		EDIT_MODE=false
 	fi
 }
 
@@ -78,7 +78,7 @@ function main() {
 	sleep $SLEEP_TIME
 	if [[ $EDIT_MODE_ENABLED ]]; then
 		check_edit_mode
-		if [[ -n $EDIT_MODE ]]; then
+		if [ $EDIT_MODE == true ]; then
 			return
 		fi
 	fi
