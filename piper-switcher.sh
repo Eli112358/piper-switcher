@@ -30,6 +30,8 @@ function get_previous_profile_file() {
 	echo ''
 }
 
+PROFILE_CLASSES[2]=$(basename $(cat $(get_previous_profile_file)) | cut -d '.' -f 1)
+
 function parse_action() {
 	echo $1 | awk -F'is mapped to ' '{print $2}' | sed -e 's/↓/+KEY_/' -e 's/↑/-KEY_/' -e 's/↕/KEY_/' | tr -d "'"
 }
@@ -90,6 +92,9 @@ function main() {
 		return
 	fi
 	PREV_ACTIVE_CLASS=$active_class
+	if [[ ${PROFILE_CLASSES[$(get_active_profile)]} == $active_class ]]; then
+		return
+	fi
 	profile_file=$(get_profile $active_class)
 	if [[ $active_class == $DESKTOP_CLASS ]]; then
 		activate_profile 0
@@ -98,6 +103,7 @@ function main() {
 	elif [[ -f $profile_file ]]; then
 		if [[ ! $(get_previous_profile_file) == $profile_file ]]; then
 			load_profile "$profile_file"
+			PROFILE_CLASSES[2]=$active_class
 		fi
 		activate_profile 2
 	fi
