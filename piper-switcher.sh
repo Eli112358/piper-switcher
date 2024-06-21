@@ -7,9 +7,6 @@ SLEEP_TIME=1
 
 source $SWITCHER_DIR/environment
 
-BROWSER_CLASS="Vivaldi-stable"
-DESKTOP_CLASS="plasmashell"
-
 function get_profile() {
 	echo "$SWITCHER_DIR/profiles/$1.profile"
 }
@@ -95,18 +92,20 @@ function main() {
 	if [[ ${PROFILE_CLASSES[$(get_active_profile)]} == $active_class ]]; then
 		return
 	fi
-	profile_file=$(get_profile $active_class)
-	if [[ $active_class == $DESKTOP_CLASS ]]; then
-		activate_profile 0
-	elif [[ $active_class == $BROWSER_CLASS ]]; then
-		activate_profile 1
-	elif [[ -f $profile_file ]]; then
-		if [[ ! $(get_previous_profile_file) == $profile_file ]]; then
-			load_profile "$profile_file"
-			PROFILE_CLASSES[2]=$active_class
+	for (( i = 0; i < 3; i++ )); do
+		if [[ $active_class == ${PROFILE_CLASSES[$i]} ]]; then
+			activate_profile $i
 		fi
-		activate_profile 2
+	done
+	profile_file=$(get_profile $active_class)
+	if [[ ! -f $profile_file ]]; then
+		return
 	fi
+	if [[ ! $(get_previous_profile_file) == $profile_file ]]; then
+		load_profile "$profile_file"
+		PROFILE_CLASSES[2]=$active_class
+	fi
+	activate_profile 2
 }
 
 trap "echo Exited!; exit;" SIGINT SIGTERM
