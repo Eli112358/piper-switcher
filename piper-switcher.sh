@@ -16,7 +16,10 @@ function get_profile() {
 
 EDIT_MODE=''
 PREV_PROFILE_FILE=$(get_profile previous)
-PREV_PROFILE_ID=$(ratbagctl $DEVICE_ID profile active get)
+
+function get_active_profile() {
+	ratbagctl $DEVICE_ID profile active get
+}
 
 function parse_action() {
 	echo $1 | awk -F'is mapped to ' '{print $2}' | sed -e 's/↓/+KEY_/' -e 's/↑/-KEY_/' -e 's/↕/KEY_/' | tr -d "'"
@@ -53,11 +56,10 @@ function load_profile() {
 }
 
 function activate_profile() {
-	if [[ $PREV_PROFILE_ID == $1 ]]; then
+	if [[ $(get_active_profile) == $1 ]]; then
 		return
 	fi
 	ratbagctl $DEVICE_ID profile active set $1
-	PREV_PROFILE_ID=$1
 	echo "Profile $1 in now active"
 }
 
