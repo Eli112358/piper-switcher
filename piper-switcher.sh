@@ -52,12 +52,6 @@ function parse_line() {
 }
 
 function load_profile() {
-	if [[ -f $PREV_PROFILE_FILE ]]; then
-		prev_profile=$(cat $PREV_PROFILE_FILE)
-	fi
-	if [[ $prev_profile == $1 ]]; then
-		return
-	fi
 	while read line; do
 		parse_line "$line"
 	done < $1
@@ -102,7 +96,9 @@ function main() {
 	elif [[ $active_class == $BROWSER_CLASS ]]; then
 		activate_profile 1
 	elif [[ -f $profile_file ]]; then
-		load_profile "$profile_file"
+		if [[ ! $(get_previous_profile_file) == $profile_file ]]; then
+			load_profile "$profile_file"
+		fi
 		activate_profile 2
 	fi
 }
