@@ -7,7 +7,7 @@ Automatically switch profiles based on active window (like G Hub) on Linux
 2. Unzip it
 3. In your favorite editor, edit shell script to replace user-specific details
 4. Open a terminal in the directory of the extracted zip
-5. In the terminal enter or copy/paste:
+5. Copy and paste the following code into the terminal
 ```bash
 sudo mv piper-switcher.sh /usr/bin
 sudo mv piper-swithcer.service /etc/systemd/system
