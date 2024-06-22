@@ -1,5 +1,5 @@
 # piper-switcher
-Automatically switch profiles based on active window (like G Hub) on Linux
+Automatically switch Piper profiles based on active window on Linux (like G Hub on Windows)
 
 # Installation
 
