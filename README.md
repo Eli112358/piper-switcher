@@ -8,7 +8,7 @@ Automatically switch Piper profiles based on active window on Linux (like G Hub 
 
 # Installation
 
-1. Download the `Source code (zip)` of the latest relaese
+1. Download the `Source code` of the latest relaese
 2. Unzip it
 3. In your favorite text editor, fill out the `environment` file
 4. Open a terminal in the directory of the extracted zip
