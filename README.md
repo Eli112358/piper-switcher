@@ -1,6 +1,11 @@
 # piper-switcher
 Automatically switch Piper profiles based on active window on Linux (like G Hub on Windows)
 
+# Requirements
+
+- Piper
+- xdotool
+
 # Installation
 
 1. Download the `Source code (zip)` of the latest relaese
