@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # set -xve
 
+# getters
+
 function get_active_profile() {
 	ratbagctl $DEVICE_ID profile active get
 }
@@ -16,6 +18,8 @@ function get_previous_profile_file() {
 function get_profile() {
 	echo "$SWITCHER_DIR/profiles/$1.profile"
 }
+
+# helpers
 
 function activate_profile() {
 	if [[ $(get_active_profile) == $1 ]]; then
@@ -72,6 +76,8 @@ function load_profile() {
 	echo $1 > $PREV_PROFILE_FILE
 }
 
+# main
+
 function main() {
 	sleep $SLEEP_TIME
 	if [[ $EDIT_MODE_ENABLED ]]; then
@@ -102,6 +108,8 @@ function main() {
 	activate_profile 2
 }
 
+# setup/init
+
 SWITCHER_DIR=/etc/piper-switcher.d
 
 EDIT_MODE=false
@@ -112,6 +120,8 @@ PROFILE_CLASSES[2]=$(basename $(cat $(get_previous_profile_file)) | cut -d '.' -
 SLEEP_TIME=1
 
 source $SWITCHER_DIR/environment
+
+# main loop
 
 trap "echo Exited!; exit;" SIGINT SIGTERM
 while true; do
