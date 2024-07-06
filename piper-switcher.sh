@@ -109,10 +109,8 @@ function main() {
 	if [[ ! -f $profile_file ]]; then
 		return
 	fi
-	if [[ ! $(get_previous_profile_file) == $profile_file ]]; then
-		load_profile "$profile_file"
-		PROFILE_CLASSES[2]=$active_class
-	fi
+	load_profile "$profile_file"
+	PROFILE_CLASSES[2]=$active_class
 	activate_profile 2
 }
 
