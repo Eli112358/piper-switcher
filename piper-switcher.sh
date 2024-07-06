@@ -1,20 +1,6 @@
 #!/usr/bin/env bash
 # set -xve
 
-SWITCHER_DIR=/etc/piper-switcher.d
-EDIT_MODE_ENABLED=true
-SLEEP_TIME=1
-
-source $SWITCHER_DIR/environment
-
-function get_profile() {
-	echo "$SWITCHER_DIR/profiles/$1.profile"
-}
-
-EDIT_MODE=false
-PREV_ACTIVE_CLASS=''
-PREV_PROFILE_FILE=$(get_profile previous)
-
 function get_active_profile() {
 	ratbagctl $DEVICE_ID profile active get
 }
@@ -27,34 +13,8 @@ function get_previous_profile_file() {
 	echo ''
 }
 
-PROFILE_CLASSES[2]=$(basename $(cat $(get_previous_profile_file)) | cut -d '.' -f 1)
-
-function parse_action() {
-	echo $1 | awk -F'is mapped to ' '{print $2}' | sed -e 's/↓/+KEY_/' -e 's/↑/-KEY_/' -e 's/↕/KEY_/' | tr -d "'"
-}
-
-function parse_line() {
-	if [[ $1 =~ ^# ]]; then
-		profile_name=${1:2}
-		echo "Loading profile $profile_name ..."
-		return
-	fi
-	btn_num=$(echo $1 | cut -d " " -f 2)
-	action=$(parse_action "$1")
-	if [[ $action == UNKNOWN ]]; then
-		return
-	fi
-	if [[ ! $action =~ ^button && ! $action =~ ^macro ]]; then
-		action="special $action"
-	fi
-	ratbagctl $DEVICE_ID profile 2 button $btn_num action set $(echo $action)
-}
-
-function load_profile() {
-	while read line; do
-		parse_line "$line"
-	done < $1
-	echo $1 > $PREV_PROFILE_FILE
+function get_profile() {
+	echo "$SWITCHER_DIR/profiles/$1.profile"
 }
 
 function activate_profile() {
@@ -82,6 +42,34 @@ function check_edit_mode() {
 	echo "# new profile" > $(get_profile new)
 	ratbagctl $DEVICE_ID profile 2 get | grep '^Button: [0-9]* is mapped to ' >> $(get_profile new)
 	EDIT_MODE=false
+}
+
+function parse_action() {
+	echo $1 | awk -F'is mapped to ' '{print $2}' | sed -e 's/↓/+KEY_/' -e 's/↑/-KEY_/' -e 's/↕/KEY_/' | tr -d "'"
+}
+
+function parse_line() {
+	if [[ $1 =~ ^# ]]; then
+		profile_name=${1:2}
+		echo "Loading profile $profile_name ..."
+		return
+	fi
+	btn_num=$(echo $1 | cut -d " " -f 2)
+	action=$(parse_action "$1")
+	if [[ $action == UNKNOWN ]]; then
+		return
+	fi
+	if [[ ! $action =~ ^button && ! $action =~ ^macro ]]; then
+		action="special $action"
+	fi
+	ratbagctl $DEVICE_ID profile 2 button $btn_num action set $(echo $action)
+}
+
+function load_profile() {
+	while read line; do
+		parse_line "$line"
+	done < $1
+	echo $1 > $PREV_PROFILE_FILE
 }
 
 function main() {
@@ -113,6 +101,17 @@ function main() {
 	PROFILE_CLASSES[2]=$active_class
 	activate_profile 2
 }
+
+SWITCHER_DIR=/etc/piper-switcher.d
+
+EDIT_MODE=false
+EDIT_MODE_ENABLED=true
+PREV_ACTIVE_CLASS=''
+PREV_PROFILE_FILE=$(get_profile previous)
+PROFILE_CLASSES[2]=$(basename $(cat $(get_previous_profile_file)) | cut -d '.' -f 1)
+SLEEP_TIME=1
+
+source $SWITCHER_DIR/environment
 
 trap "echo Exited!; exit;" SIGINT SIGTERM
 while true; do
