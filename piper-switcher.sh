@@ -97,6 +97,7 @@ function main() {
 	for (( i = 0; i < 3; i++ )); do
 		if [[ $active_class == ${PROFILE_CLASSES[$i]} ]]; then
 			activate_profile $i
+			return
 		fi
 	done
 	profile_file=$(get_profile $active_class)
