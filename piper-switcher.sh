@@ -113,14 +113,14 @@ function main() {
 
 SWITCHER_DIR=/etc/piper-switcher.d
 
+source $SWITCHER_DIR/environment
+
 EDIT_MODE=false
 EDIT_MODE_ENABLED=true
 PREV_ACTIVE_CLASS=''
 PREV_PROFILE_FILE=$(get_profile previous)
 PROFILE_CLASSES[2]=$(basename $(cat $(get_previous_profile_file)) | cut -d '.' -f 1)
 SLEEP_TIME=1
-
-source $SWITCHER_DIR/environment
 
 # main loop
 
