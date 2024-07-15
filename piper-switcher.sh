@@ -4,12 +4,12 @@
 # getters
 
 function get_active_profile() {
-	ratbagctl $DEVICE_ID profile active get
+	ratbagctl "$DEVICE_ID" profile active get
 }
 
 function get_previous_profile_file() {
-	if [[ -f $PREV_PROFILE_FILE ]]; then
-		cat $PREV_PROFILE_FILE
+	if [[ -f "$PREV_PROFILE_FILE" ]]; then
+		cat "$PREV_PROFILE_FILE"
 		return
 	fi
 	echo ''
@@ -25,7 +25,7 @@ function activate_profile() {
 	if [[ $(get_active_profile) == $1 ]]; then
 		return
 	fi
-	ratbagctl $DEVICE_ID profile active set $1
+	ratbagctl "$DEVICE_ID" profile active set $1
 	echo "Profile $1 in now active"
 }
 
@@ -44,7 +44,7 @@ function check_edit_mode() {
 	fi
 	echo "Exiting edit mode and exporting new profile"
 	echo "# new profile" > $(get_profile new)
-	ratbagctl $DEVICE_ID profile 2 get | grep '^Button: [0-9]* is mapped to ' >> $(get_profile new)
+	ratbagctl "$DEVICE_ID" profile 2 get | grep '^Button: [0-9]* is mapped to ' >> $(get_profile new)
 	EDIT_MODE=false
 }
 
@@ -54,7 +54,7 @@ function parse_action() {
 
 function parse_line() {
 	if [[ $1 =~ ^# ]]; then
-		profile_name=${1:2}
+		profile_name="${1:2}"
 		echo "Loading profile $profile_name ..."
 		return
 	fi
@@ -66,14 +66,14 @@ function parse_line() {
 	if [[ ! $action =~ ^button && ! $action =~ ^macro ]]; then
 		action="special $action"
 	fi
-	ratbagctl $DEVICE_ID profile 2 button $btn_num action set $(echo $action)
+	ratbagctl "$DEVICE_ID" profile 2 button $btn_num action set $(echo $action)
 }
 
 function load_profile() {
 	while read line; do
 		parse_line "$line"
-	done < $1
-	echo $1 > $PREV_PROFILE_FILE
+	done < "$1"
+	echo "$1" > $PREV_PROFILE_FILE
 }
 
 # main
@@ -86,26 +86,26 @@ function main() {
 	if [ $EDIT_MODE == true ]; then
 		return
 	fi
-	active_class=$(su $USER -c "export DISPLAY='$DISPLAY';xdotool getwindowfocus getwindowclassname")
-	if [[ $active_class == $PREV_ACTIVE_CLASS ]]; then
+	active_class="$(su $USER -c "export DISPLAY='$DISPLAY';xdotool getwindowfocus getwindowclassname")"
+	if [[ "$active_class" == "$PREV_ACTIVE_CLASS" ]]; then
 		return
 	fi
-	PREV_ACTIVE_CLASS=$active_class
-	if [[ ${PROFILE_CLASSES[$(get_active_profile)]} == $active_class ]]; then
+	PREV_ACTIVE_CLASS="$active_class"
+	if [[ "${PROFILE_CLASSES[$(get_active_profile)]}" == "$active_class" ]]; then
 		return
 	fi
 	for (( i = 0; i < 3; i++ )); do
-		if [[ $active_class == ${PROFILE_CLASSES[$i]} ]]; then
+		if [[ "$active_class" == "${PROFILE_CLASSES[$i]}" ]]; then
 			activate_profile $i
 			return
 		fi
 	done
-	profile_file=$(get_profile $active_class)
-	if [[ ! -f $profile_file ]]; then
+	profile_file="$(get_profile "$active_class")"
+	if [[ ! -f "$profile_file" ]]; then
 		return
 	fi
 	load_profile "$profile_file"
-	PROFILE_CLASSES[2]=$active_class
+	PROFILE_CLASSES[2]="$active_class"
 	activate_profile 2
 }
 
@@ -119,7 +119,7 @@ EDIT_MODE=false
 EDIT_MODE_ENABLED=true
 PREV_ACTIVE_CLASS=''
 PREV_PROFILE_FILE=$(get_profile previous)
-PROFILE_CLASSES[2]=$(basename $(cat $(get_previous_profile_file)) | cut -d '.' -f 1)
+PROFILE_CLASSES[2]="$(basename -s .profile $(get_previous_profile_file))"
 SLEEP_TIME=1
 
 # main loop
