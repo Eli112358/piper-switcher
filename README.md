@@ -5,6 +5,9 @@ Automatically switch Piper profiles based on active window on Linux (like G Hub 
 
 - Piper
 - xdotool
+- [x11_watch_active_window.py](https://gist.github.com/dperelman/c1d3c966d397ff884abb8b3baf7990db)
+
+Note: `xdotool` and `x11_watch_active_window.py` must be available on the `$PATH`
 
 # Installation
 
