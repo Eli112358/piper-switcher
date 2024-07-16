@@ -79,7 +79,6 @@ function load_profile() {
 # main
 
 function main() {
-	sleep $SLEEP_TIME
 	if [[ $EDIT_MODE_ENABLED ]]; then
 		check_edit_mode
 	fi
@@ -95,7 +94,7 @@ function main() {
 		return
 	fi
 	for (( i = 0; i < 3; i++ )); do
-		if [[ "$active_class" == "${PROFILE_CLASSES[$i]}" ]]; then
+		if [[ "${PROFILE_CLASSES[$i]}" =~ "$active_class" ]]; then
 			activate_profile $i
 			return
 		fi
@@ -124,7 +123,6 @@ SLEEP_TIME=1
 
 # main loop
 
-trap "echo Exited!; exit;" SIGINT SIGTERM
-while true; do
+x11_watch_active_window.py | while read -r FocusApp; do
 	main | logger -t piper-switcher
 done
