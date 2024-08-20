@@ -85,11 +85,8 @@ function main() {
 	if [ $EDIT_MODE == true ]; then
 		return
 	fi
+	PROFILE_CLASSES[2]="$(basename -s .profile $(get_previous_profile_file))"
 	active_class="$(su $USER -c "export DISPLAY='$DISPLAY';xdotool getwindowfocus getwindowclassname")"
-	if [[ "$active_class" == "$PREV_ACTIVE_CLASS" ]]; then
-		return
-	fi
-	PREV_ACTIVE_CLASS="$active_class"
 	if [[ "${PROFILE_CLASSES[$(get_active_profile)]}" == "$active_class" ]]; then
 		return
 	fi
@@ -104,7 +101,6 @@ function main() {
 		return
 	fi
 	load_profile "$profile_file"
-	PROFILE_CLASSES[2]="$active_class"
 	activate_profile 2
 }
 
@@ -118,7 +114,6 @@ EDIT_MODE=false
 EDIT_MODE_ENABLED=true
 PREV_ACTIVE_CLASS=''
 PREV_PROFILE_FILE=$(get_profile previous)
-PROFILE_CLASSES[2]="$(basename -s .profile $(get_previous_profile_file))"
 SLEEP_TIME=1
 
 # main loop
